@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:vendor_app_only/vendor/views/auth/vendor_auth_screen.dart';
+import 'package:vendor_app_only/vendor/views/auth/vendor_registration_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

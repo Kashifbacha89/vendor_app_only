@@ -43,6 +43,7 @@ dependencies:
   firebase_auth: ^4.15.3
   firebase_storage: ^11.5.6
   image_picker: ^1.0.5
+  country_state_city_picker:
 
 dev_dependencies:
   flutter_test:
