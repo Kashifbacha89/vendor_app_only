@@ -6,16 +6,7 @@ import 'package:vendor_app_only/vendor/views/auth/vendor_registration_screen.dar
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Platform.isAndroid?await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyAWDdj9AQS1jGnzKqdNq2GvrhvuPvjFD8I",
-        appId: "1:761654940887:android:2b2a6192524f9b3a25cc92",
-        messagingSenderId: "761654940887",
-        projectId: "my-personal-project-d4328",
-      storageBucket: "my-personal-project-d4328.appspot.com"
-
-    ),
-  ):Firebase.initializeApp();
+ await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
