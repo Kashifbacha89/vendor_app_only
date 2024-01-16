@@ -4,6 +4,7 @@ import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vendor_app_only/vendor/controllers/vendor_reg_controller.dart';
 class VendorRegistrationScreen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   _saveVendorData() async {
     print('save data');
     if (_formKey.currentState!.validate()) {
+      EasyLoading.show(status: 'PLEASE WAIT' );
       try {
         String result = await _vendorController.registerVendor(
           businessName,
@@ -50,13 +52,20 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
           _taxStatus!,
           taxNumber,
           _image,
-        );
+        ).whenComplete(() {
+          EasyLoading.dismiss();
+          setState(() {
+            _formKey.currentState!.reset();
+            _image=null;
+          });
+        });
         print('Registration result: $result');
       } catch (e) {
         print('Error during registration: $e');
       }
     } else {
       print('some error');
+      EasyLoading.dismiss();
     }
   }
 

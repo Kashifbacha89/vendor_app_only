@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class VendorController {
-  final FirebaseStorage _storage=FirebaseStorage.instance;
-  final FirebaseAuth _auth=  FirebaseAuth.instance;
-  final FirebaseFirestore _fireStore=FirebaseFirestore.instance;
-  //FUNCTION TO PICK STORE IMAGE
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final Uuid _uuid = const Uuid();
+
+  // FUNCTION TO PICK STORE IMAGE
   pickStoreImage(ImageSource source) async {
     final ImagePicker _imagePicker = ImagePicker();
     XFile? _file = await _imagePicker.pickImage(source: source);
@@ -18,15 +21,16 @@ class VendorController {
     } else {
       print('No Image is selected');
     }
-    //FUNCTION TO PICK STORE IMAGE END HERE
+    // FUNCTION TO PICK STORE IMAGE END HERE
   }
-//FUNCTION TO STORE IMAGE TO FIREBASE STORAGE
-  _uploadVendorImageToFirestore(Uint8List? image)async{
 
-    Reference ref=_storage.ref().child('storeImages').child(_auth.currentUser!.uid);
-    UploadTask uploadTask=ref.putData(image!);
-    TaskSnapshot taskSnapshot=await uploadTask;
-    String downloadUrl=await taskSnapshot.ref.getDownloadURL();
+  // FUNCTION TO STORE IMAGE TO FIREBASE STORAGE
+  _uploadVendorImageToFirestore(Uint8List? image) async {
+    String uuid = _uuid.v4(); // Generate a unique identifier
+    Reference ref = _storage.ref().child('storeImages').child(uuid);
+    UploadTask uploadTask = ref.putData(image!);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 
@@ -42,33 +46,28 @@ class VendorController {
       Uint8List? image,
       ) async {
     String res = 'something went wrong!';
+    String uuid = _uuid.v4();
     try {
-      // Check if the user is authenticated before accessing uid
-      if (_auth.currentUser != null) {
-        String storeImage = await _uploadVendorImageToFirestore(image);
+      String storeImage = await _uploadVendorImageToFirestore(image);
 
-        // Save data to Cloud Firestore
-        await _fireStore.collection('vendors').doc(_auth.currentUser!.uid).set({
-          'businessName': businessName,
-          'email': email,
-          'phoneNumber': phoneNumber,
-          'countryValue': countryValue,
-          'stateValue': stateValue,
-          'cityValue': cityValue,
-          'taxRegistered': taxRegistered,
-          'taxNumber': taxNumber,
-          'storeImage': storeImage,
-          'approved': false,
-        });
+      // Save data to Cloud Firestore with the same UUID
+      await _fireStore.collection('vendors').doc(uuid).set({
+        'businessName': businessName,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'countryValue': countryValue,
+        'stateValue': stateValue,
+        'cityValue': cityValue,
+        'taxRegistered': taxRegistered,
+        'taxNumber': taxNumber,
+        'storeImage': storeImage,
+        'approved': false,
+      });
 
-        res = 'Registration successful';
-      } else {
-        res = 'User not authenticated';
-      }
+      res = 'Registration successful';
     } catch (e) {
       res = e.toString();
     }
     return res;
   }
-
 }
