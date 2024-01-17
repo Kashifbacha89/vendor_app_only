@@ -26,13 +26,18 @@ class VendorController {
 
   // FUNCTION TO STORE IMAGE TO FIREBASE STORAGE
   _uploadVendorImageToFirestore(Uint8List? image) async {
-    String uuid = _uuid.v4(); // Generate a unique identifier
+    String uuid = _uuid.v4();
     Reference ref = _storage.ref().child('storeImages').child(uuid);
     UploadTask uploadTask = ref.putData(image!);
     TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+    // Get download URL without the token
+    String downloadUrl = await ref.getDownloadURL();
+
+    print('Download URL: $downloadUrl'); // Add this line for debugging
     return downloadUrl;
   }
+
 
   Future<String> registerVendor(
       String businessName,

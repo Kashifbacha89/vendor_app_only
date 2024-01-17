@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vendor_app_only/vendor/controllers/vendor_reg_controller.dart';
+import 'package:vendor_app_only/vendor/views/screens/landing_screen.dart';
 class VendorRegistrationScreen extends StatefulWidget {
   const VendorRegistrationScreen({Key? key}) : super(key: key);
 
@@ -254,6 +255,25 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                         ),
                         child: const Center(
                           child:  Text('SAVE',style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,color: Colors.white),),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40,),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>const LandingScreen()));
+                      },
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width-40,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.yellow.shade900,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child:  Text('GO',style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,color: Colors.white),),
                         ),
